@@ -3,7 +3,7 @@ import 'package:app_pay_flow/shared/themes/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 class TextStyles{
   static final titleHome = GoogleFonts.lexendDeca(
-    fontSize: 32,
+    fontSize: 26,
     fontWeight: FontWeight.w600,
     color: AppColors.heading,
   );
