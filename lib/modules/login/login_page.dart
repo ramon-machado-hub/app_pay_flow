@@ -3,6 +3,9 @@ import 'package:app_pay_flow/shared/themes/app_images.dart';
 import 'package:app_pay_flow/shared/themes/app_text_styles.dart';
 import 'package:app_pay_flow/shared/widgets/social_login/social_login_button.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:app_pay_flow/modules/login/login_controller.dart';
+
 
 class Login_Page extends StatefulWidget {
   const Login_Page({Key? key}) : super(key: key);
@@ -12,6 +15,7 @@ class Login_Page extends StatefulWidget {
 }
 
 class _Login_PageState extends State<Login_Page> {
+  final controller = LoginController();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -27,15 +31,15 @@ class _Login_PageState extends State<Login_Page> {
                 height: size.height * 0.35,
                 color: AppColors.primary,
               ),
-            Positioned(
-                top: 30,
-                left: 0,
-                right: 0,
-                child: Image.asset(
-                  AppImages.person,
-                  width: 208,
-                  height: 300,
-                )),
+              Positioned(
+                  top: 30,
+                  left: 0,
+                  right: 0,
+                  child: Image.asset(
+                    AppImages.person,
+                    width: 208,
+                    height: 300,
+                  )),
 
               Positioned(
                   bottom: size.height * 0.03,
@@ -55,22 +59,20 @@ class _Login_PageState extends State<Login_Page> {
                           style: TextStyles.titleHome,
                         ),
                       ),
-                    Padding(
-                      padding:
-                      const EdgeInsets.only(left: 40, right: 40, top: 20),
-                      child: SocialLoginButton(
-                        onTap: () {
-                          print("clicou");
-                        },
-                      ),
-                    )
-                  ],
-                )),
-          ],
-        )
-
+                      Padding(
+                        padding:
+                        const EdgeInsets.only(left: 40, right: 40, top: 20),
+                        child: SocialLoginButton(
+                          onTap: (){
+                            controller.googleSignin(context);
+                          },
+                        ),
+                      )
+                    ],
+                  )),
+            ],
+          )
       ),
-
     );
   }
 }
