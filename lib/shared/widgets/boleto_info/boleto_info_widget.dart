@@ -6,7 +6,8 @@ import 'package:app_pay_flow/shared/widgets/boleto_list/boleto_list_controller.d
 import 'package:flutter/material.dart';
 
 class BoletoInfoWidget extends StatefulWidget {
-  BoletoInfoWidget({Key? key}) : super(key: key);
+  final int size;
+  BoletoInfoWidget({Key? key,required this.size}) : super(key: key);
 
   @override
   _BoletoInfoWidgetState createState() => _BoletoInfoWidgetState();

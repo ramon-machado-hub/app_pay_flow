@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(152),
         child: Container(
-          height: 152,
+          height: 130,
           color: AppColors.primary,
           child: Center(
             child: ListTile(

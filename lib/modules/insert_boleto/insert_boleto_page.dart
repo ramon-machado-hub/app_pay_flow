@@ -32,6 +32,7 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
   void initState() {
     if (widget.barcode != null) {
       codigoInputTextController.text = widget.barcode!;
+      print(widget.barcode);
     }
     super.initState();
   }
@@ -55,7 +56,7 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
             children: [
               Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 93, vertical: 24),
+                const EdgeInsets.symmetric(horizontal: 53, vertical: 4),
                 child: Text(
                   "Preencha os dados do boleto",
                   style: TextStyles.titleBoldHeading,
@@ -64,46 +65,53 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
               ),
               Form(
                 key: controller.formKey,
-                child: Column(
-                  children: [
-                    InputTextWidget(
-                      label: "Nome do boleto",
-                      icon: Icons.description_outlined,
-                      onChanged: (value) {
-                        controller.onChange(name: value);
-                      },
-                      validator: controller.validateName,
-                    ),
-                    InputTextWidget(
-                      controller: vencimentoInputTextController,
-                      label: "Vencimento",
-                      icon: FontAwesomeIcons.timesCircle,
-                      onChanged: (value) {
-                        controller.onChange(dueDate: value);
-                      },
-                      validator: controller.validateVencimento,
-                    ),
-                    InputTextWidget(
-                      controller: moneyInputTextController,
-                      label: "Valor",
-                      icon: FontAwesomeIcons.wallet,
-                      validator: (_) => controller
-                          .validateValor(moneyInputTextController.numberValue),
-                      onChanged: (value) {
-                        controller.onChange(
-                            value: moneyInputTextController.numberValue);
-                      },
-                    ),
-                    InputTextWidget(
-                      controller: codigoInputTextController,
-                      label: "Código",
-                      icon: FontAwesomeIcons.barcode,
-                      validator: controller.validateCodigo,
-                      onChanged: (value) {
-                        controller.onChange(barcode: value);
-                      },
-                    )
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+                  child: Column(
+                    children: [
+                      InputTextWidget(
+                        keyboardType: TextInputType.name,
+                        label: "Nome do boleto",
+                        icon: Icons.description_outlined,
+                        onChanged: (value) {
+                          controller.onChange(name: value);
+                        },
+                        validator: controller.validateName,
+                      ),
+                      InputTextWidget(
+                        keyboardType: TextInputType.datetime,
+                        controller: vencimentoInputTextController,
+                        label: "Vencimento",
+                        icon: FontAwesomeIcons.timesCircle,
+                        onChanged: (value) {
+                          controller.onChange(dueDate: value);
+                        },
+                        validator: controller.validateVencimento,
+                      ),
+                      InputTextWidget(
+                        keyboardType: TextInputType.number,
+                        controller: moneyInputTextController,
+                        label: "Valor",
+                        icon: FontAwesomeIcons.wallet,
+                        validator: (_) => controller
+                            .validateValor(moneyInputTextController.numberValue),
+                        onChanged: (value) {
+                          controller.onChange(
+                              value: moneyInputTextController.numberValue);
+                        },
+                      ),
+                      InputTextWidget(
+                        keyboardType: TextInputType.number,
+                        controller: codigoInputTextController,
+                        label: "Código",
+                        icon: FontAwesomeIcons.barcode,
+                        validator: controller.validateCodigo,
+                        onChanged: (value) {
+                          controller.onChange(barcode: value);
+                        },
+                      )
+                    ],
+                  ),
                 ),
               )
             ],
