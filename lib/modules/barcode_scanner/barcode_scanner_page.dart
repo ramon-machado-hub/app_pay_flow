@@ -1,12 +1,11 @@
-import 'package:app_pay_flow/modules/barcode_scanner/barcode_scanner_controller.dart';
-import 'package:app_pay_flow/modules/barcode_scanner/barcode_scanner_status.dart';
 import 'package:app_pay_flow/shared/themes/app_colors.dart';
 import 'package:app_pay_flow/shared/themes/app_text_styles.dart';
 import 'package:app_pay_flow/shared/widgets/button_sheet/button_sheet_widget.dart';
 import 'package:app_pay_flow/shared/widgets/set_label_button/set_label_button.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'barcode_scanner_controller.dart';
+import 'barcode_scanner_status.dart';
 
 class BarcodeScannerPage extends StatefulWidget {
   BarcodeScannerPage({Key? key}) : super(key: key);
@@ -20,10 +19,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
 
   @override
   void initState() {
-    controller.getAvailableCamera();
+    controller.getAvailableCameras();
     controller.statusNotifier.addListener(() {
       if (controller.status.hasBarcode) {
-        Navigator.pushReplacementNamed(context, "/insert_boleto");
+        Navigator.pushReplacementNamed(context, "/insert_boleto",
+            arguments: controller.status.barcode);
       }
     });
 
@@ -92,13 +92,13 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                     )
                   ],
                 ),
-                bottomNavigationBar: SetLabelButton(
-                  primaryLabel: "Inserir código do boleto",
-                  primaryOnPressed: () {
+                bottomNavigationBar: SetLabelButtons(
+                  labelPrimary: "Inserir código do boleto",
+                  onTapPrimary: () {
                     controller.status = BarcodeScannerStatus.error("Error");
                   },
-                  secondaryLabel: "Adicionar da galeria",
-                  secondaryOnPressed: controller.scanWithImagePicker,
+                  labelSecondary: "Adicionar da galeria",
+                  onTapSecondary: controller.scanWithImagePicker,
                 )),
           ),
           ValueListenableBuilder<BarcodeScannerStatus>(
@@ -107,13 +107,13 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                 if (status.hasError) {
                   return Align(
                       alignment: Alignment.bottomLeft,
-                      child: ButtonSheetWidget(
-                          primaryLabel: "Escanear novamente",
-                          primaryOnPressed: () {
+                      child: BottomSheetWidget(
+                          labelPrimary: "Escanear novamente",
+                          onTapPrimary: () {
                             controller.scanWithCamera();
                           },
-                          secondaryLabel: "Digitar código",
-                          secondaryOnPressed: () {},
+                          labelSecondary: "Digitar código",
+                          onTapSecondary: () {},
                           title:
                           "Não foi possível identificar um código de barras.",
                           subtitle:

@@ -1,32 +1,29 @@
-import 'dart:ui';
-
-import 'package:app_pay_flow/modules/barcode_scanner/barcode_scanner_status.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 
-class BarcodeScannerController {
-  BarcodeScannerStatus get status => statusNotifier.value;
+import 'barcode_scanner_status.dart';
 
+class BarcodeScannerController {
+  final statusNotifier =
+  ValueNotifier<BarcodeScannerStatus>(BarcodeScannerStatus());
+  BarcodeScannerStatus get status => statusNotifier.value;
   set status(BarcodeScannerStatus status) => statusNotifier.value = status;
+
   var barcodeScanner = GoogleMlKit.vision.barcodeScanner();
   CameraController? cameraController;
-  final statusNotifier =
-      ValueNotifier<BarcodeScannerStatus>(BarcodeScannerStatus());
+
   InputImage? imagePicker;
 
-  //função que verifica se a camera está disponível para uso
-  void getAvailableCamera() async {
+  void getAvailableCameras() async {
     try {
       final response = await availableCameras();
       final camera = response.firstWhere(
-          (element) => element.lensDirection == CameraLensDirection.back);
-      cameraController = CameraController(
-        camera,
-        ResolutionPreset.max,
-        enableAudio: false,
-      );
+              (element) => element.lensDirection == CameraLensDirection.back);
+      cameraController =
+          CameraController(camera, ResolutionPreset.max, enableAudio: false);
       await cameraController!.initialize();
       scanWithCamera();
       listenCamera();
@@ -35,13 +32,10 @@ class BarcodeScannerController {
     }
   }
 
-  /*Quando encontrar imagem a camera não será mais utilizada
-   o código de barra é lido se estiver tudo ok irá transferir para a página
-   contendo as informações do boleto.
-   */
   Future<void> scannerBarCode(InputImage inputImage) async {
     try {
       final barcodes = await barcodeScanner.processImage(inputImage);
+
       var barcode;
       for (Barcode item in barcodes) {
         barcode = item.value.displayValue;
@@ -59,9 +53,12 @@ class BarcodeScannerController {
     }
   }
 
-  /* Esta função tem um time out de 10 segundos,
-   se a câmera não conseguiu ler nesses 10 segundos ele vai parar a camera
-   */
+  void scanWithImagePicker() async {
+    final response = await ImagePicker().getImage(source: ImageSource.gallery);
+    final inputImage = InputImage.fromFilePath(response!.path);
+    scannerBarCode(inputImage);
+  }
+
   void scanWithCamera() {
     status = BarcodeScannerStatus.available();
     Future.delayed(Duration(seconds: 20)).then((value) {
@@ -70,13 +67,6 @@ class BarcodeScannerController {
     });
   }
 
-  void scanWithImagePicker() async {
-    final response = await ImagePicker().getImage(source: ImageSource.gallery);
-    final inputImage = InputImage.fromFilePath(response!.path);
-    scannerBarCode(inputImage);
-  }
-
-  //função para "ouvir" a imagem que vem da camera documentação google ml kit
   void listenCamera() {
     if (cameraController!.value.isStreamingImages == false)
       cameraController!.startImageStream((cameraImage) async {
@@ -95,7 +85,7 @@ class BarcodeScannerController {
                 InputImageFormatMethods.fromRawValue(cameraImage.format.raw) ??
                     InputImageFormat.NV21;
             final planeData = cameraImage.planes.map(
-              (Plane plane) {
+                  (Plane plane) {
                 return InputImagePlaneMetadata(
                   bytesPerRow: plane.bytesPerRow,
                   height: plane.height,
@@ -103,6 +93,7 @@ class BarcodeScannerController {
                 );
               },
             ).toList();
+
             final inputImageData = InputImageData(
               size: imageSize,
               imageRotation: imageRotation,
