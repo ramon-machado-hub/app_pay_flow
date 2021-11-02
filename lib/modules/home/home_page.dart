@@ -4,11 +4,11 @@ import 'package:app_pay_flow/shared/models/user_model.dart';
 import 'package:app_pay_flow/shared/themes/app_colors.dart';
 import 'package:app_pay_flow/shared/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
-
 import 'home_controller.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
+
   const HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
@@ -18,13 +18,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final controller = HomeController();
   final pages = [MeusBoletosPage(), ExtractPage()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(152),
+        preferredSize: Size.fromHeight(122),
         child: Container(
-          height: 130,
+          height: 122,
           color: AppColors.primary,
           child: Center(
             child: ListTile(
@@ -43,8 +44,8 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyles.captionShape,
               ),
               trailing: Container(
-                height: 48,
-                width: 48,
+                height: 57,
+                width: 57,
                 decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(5),
@@ -55,6 +56,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+
       body: pages[controller.currentPage],
       bottomNavigationBar: Container(
         height: 90,

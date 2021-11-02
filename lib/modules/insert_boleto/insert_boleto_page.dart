@@ -5,6 +5,7 @@ import 'package:app_pay_flow/shared/widgets/set_label_button/set_label_button.da
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'insert_boleto_controller.dart';
 
@@ -20,6 +21,8 @@ class InsertBoletoPage extends StatefulWidget {
 }
 
 class _InsertBoletoPageState extends State<InsertBoletoPage> {
+  BannerAd? bannerAd;
+  bool isLoaded = false;
   final controller = InsertBoletoController();
 
   final moneyInputTextController = MoneyMaskedTextController(
@@ -27,6 +30,27 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
   final vencimentoInputTextController =
   MaskedTextController(mask: "00/00/0000");
   final codigoInputTextController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    bannerAd = BannerAd(size: AdSize.banner,
+      adUnitId: "ca-app-pub-3940256099942544/6300978111",
+      listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              isLoaded = true;
+            });
+            print("Banner Ad Loaded");
+          },
+          onAdFailedToLoad: (ad, error) {
+            ad.dispose();
+          }
+      ),
+      request: AdRequest(),
+    );
+    bannerAd!.load();
+  }
 
   @override
   void initState() {
@@ -54,6 +78,12 @@ class _InsertBoletoPageState extends State<InsertBoletoPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              isLoaded ? Container(
+                height: 50,
+                child: AdWidget(
+                  ad: bannerAd!,
+                ),
+              ) : SizedBox(),
               Padding(
                 padding:
                 const EdgeInsets.symmetric(horizontal: 53, vertical: 4),

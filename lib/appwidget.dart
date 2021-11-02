@@ -5,10 +5,13 @@ import 'package:app_pay_flow/shared/models/user_model.dart';
 import 'package:app_pay_flow/shared/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'modules/insert_boleto/insert_boleto_page.dart';
 import 'modules/login/login_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(AppWidget());
 }
 
